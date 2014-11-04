@@ -1,0 +1,70 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+
+namespace MineProtocol.net
+{
+
+
+	public class VersionInfo
+	{
+		
+		public int ProtocolID{ get; private set;}
+		public string VersionName {get; private set;}
+		public bool IsNewProtocol{ get; private set;}
+		public VersionInfo(int protocolId,string versionName,bool isNewProtocol = false)
+		{
+			this.ProtocolID = protocolId;
+			this.VersionName = versionName;
+			this.IsNewProtocol = isNewProtocol;
+		}
+	}
+	public class ProtocolVersion
+	{
+
+//新バージョン(Netty版)
+<#
+			XmlDocument doc = new XmlDocument();
+			doc.Load(@"d:\prog\VS2013\Projects\MineProtocol.net\MineProtocol.net\Versions.xml");
+
+			XmlNodeList nodeList = doc.SelectNodes("versions/new/version");
+			foreach (XmlNode old in nodeList)
+			{
+				string sProtocolId = old.Attributes["protocolId"].InnerText;
+				string versionName = old.InnerText;
+				string fieldName = versionName.Replace(".","_").Replace("/","_").Replace("-","_");
+#>
+		public static readonly VersionInfo MC<#=fieldName#> = new VersionInfo(<#= sProtocolId #>,"<#= versionName #>",true);
+<#
+			}
+#>
+
+
+
+//旧バージョン
+<#
+
+			nodeList = doc.SelectNodes("versions/old/version");
+
+			foreach (XmlNode old in nodeList)
+			{
+				string sProtocolId = old.Attributes["protocolId"].InnerText;
+				string versionName = old.InnerText;
+				string fieldName = versionName.Replace(".","_").Replace("/","_").Replace("-","_");
+				
+#>
+		public static readonly VersionInfo MC<#=fieldName#> = new VersionInfo(<#= sProtocolId #>,"<#= versionName #>");
+<#
+			}
+
+#>
+	}
+}
