@@ -1,0 +1,3 @@
+[submodule "SocketPlus"]
+	path = SocketPlus
+	url = https://github.com/inku25253/Sockets.Plus.git
