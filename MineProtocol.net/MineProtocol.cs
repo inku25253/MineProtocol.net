@@ -8,5 +8,6 @@ namespace MineProtocol.net
 {
     public class MineProtocol
     {
+
     }
 }
