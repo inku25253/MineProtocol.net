@@ -59,6 +59,12 @@
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibMinecraft\LibMinecraft.csproj">
+      <Project>{3c971993-d69c-493c-a4f8-93fc931bfe91}</Project>
+      <Name>LibMinecraft</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

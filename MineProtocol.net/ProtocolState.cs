@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace MineProtocol.net
 {
-	public class MineProtocol
+	public enum ProtocolState : int
 	{
-		public MineProtocol()
-		{
-
-
-		}
+		HANDSHAKE = 0,
+		STATUS = 1,
+		LOGIN = 2,
+		PLAY = 3
 	}
 }

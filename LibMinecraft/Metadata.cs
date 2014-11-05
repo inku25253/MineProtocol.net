@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
-namespace MineProtocol.net
+namespace LibMinecraft
 {
-	public class MineProtocol
+	public class Metadata
 	{
-		public MineProtocol()
-		{
-
-
-		}
+		//TODO: http://wiki.vg/Entities#Entity_Metadata_Format
 	}
 }

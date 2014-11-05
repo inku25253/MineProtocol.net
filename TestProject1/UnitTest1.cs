@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Xml;
+using System.IO;
+using LibMinecraft;
 
 namespace TestProject1
 {
@@ -14,18 +16,17 @@ namespace TestProject1
 
 		public static void Main()
 		{
-			XmlDocument doc = new XmlDocument();
-			doc.Load(@"d:\prog\VS2013\Projects\MineProtocol.net\MineProtocol.net\Versions.xml");
-			XmlNodeList nodeList = doc.SelectNodes("versions/old/version");
+			MemoryStream ms = new MemoryStream();
+			MinecraftStream mine = new MinecraftStream(ms);
 
-			foreach (XmlNode old in nodeList)
-			{
-				string protocolID = old.Attributes["protocolId"].InnerText;
-				string versionName = old.InnerText;
+			mine.Write("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+			ms.Position = 0;
+
+			string s = mine.ReadString();
 
 
-				Console.WriteLine("{0} : {1}", protocolID, versionName);
-			}
+
 		}
 	}
 }

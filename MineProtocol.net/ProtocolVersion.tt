@@ -27,7 +27,7 @@ namespace MineProtocol.net
 			this.IsNewProtocol = isNewProtocol;
 		}
 	}
-	public class ProtocolVersion
+	public static class ProtocolVersion
 	{
 
 //新バージョン(Netty版)
