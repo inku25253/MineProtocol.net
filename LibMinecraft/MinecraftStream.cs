@@ -114,7 +114,7 @@ namespace LibMinecraft
 		{
 			this.Write((ushort)value);
 		}
-		public void Write(int value)
+		public void WriteInt32(int value)
 		{
 			this.Write((uint)value);
 		}
@@ -126,32 +126,32 @@ namespace LibMinecraft
 		public void Write(ushort value)
 		{
 			byte[] bValue = new byte[] { 
-				(byte)((value & 0xFF00) >> 8), 
-				(byte)((value & 0x00FF) >> 0) 
+				(byte)((value & 0xFF00) >> 1 * 8), 
+				(byte)((value & 0x00FF) >> 0 * 8) 
 			};
 			this.Write(bValue);
 		}
 		public void Write(uint value)
 		{
 			byte[] bValue = new byte[] {
-				(byte)((value & 0xFF000000) >> 24), 
-				(byte)((value & 0x00FF0000) >> 16), 
-				(byte)((value & 0x0000FF00) >>  8), 
-				(byte)((value & 0x000000FF) >>  0) 
+				(byte)((value & 0xFF000000) >> 3 * 8), 
+				(byte)((value & 0x00FF0000) >> 2 * 8), 
+				(byte)((value & 0x0000FF00) >> 1 * 8), 
+				(byte)((value & 0x000000FF) >> 0 * 8) 
 			 };
 			this.Write(bValue);
 		}
 		public void Write(ulong value)
 		{
 			byte[] bValue = new byte[]{
-				(byte)(((ulong)value & 0xFF00000000000000) >> 56), 
-				(byte)(((ulong)value & 0x00FF000000000000) >> 48), 
-				(byte)(((ulong)value & 0x0000FF0000000000) >> 40), 
-				(byte)(((ulong)value & 0x000000FF00000000) >> 32),
-				(byte)(((ulong)value & 0x00000000FF000000) >> 24), 
-				(byte)(((ulong)value & 0x0000000000FF0000) >> 16), 
-				(byte)(((ulong)value & 0x000000000000FF00) >>  8), 
-				(byte)(((ulong)value & 0x00000000000000FF) >>  0) 
+				(byte)(((ulong)value & 0xFF00000000000000) >> 7 * 8), 
+				(byte)(((ulong)value & 0x00FF000000000000) >> 6 * 8), 
+				(byte)(((ulong)value & 0x0000FF0000000000) >> 5 * 8), 
+				(byte)(((ulong)value & 0x000000FF00000000) >> 4 * 8),
+				(byte)(((ulong)value & 0x00000000FF000000) >> 3 * 8), 
+				(byte)(((ulong)value & 0x0000000000FF0000) >> 2 * 8), 
+				(byte)(((ulong)value & 0x000000000000FF00) >> 1 * 8), 
+				(byte)(((ulong)value & 0x00000000000000FF) >> 0 * 8) 
 			};
 			this.Write(bValue);
 		}
@@ -169,7 +169,7 @@ namespace LibMinecraft
 		{
 			byte[] bValue = this.StringEncode.GetBytes(value);
 
-			this.WriteVarint(bValue.Length);
+			this.Write(bValue.Length);
 			this.Write(bValue);
 		}
 
@@ -192,7 +192,7 @@ namespace LibMinecraft
 		}
 
 
-		public void WriteVarint(int value)
+		public void Write(int value)
 		{
 			this.WriteVarlong(value);
 		}
@@ -206,7 +206,7 @@ namespace LibMinecraft
 			this.Write((byte)value);
 
 		}
-		public int GetVarintSize(int value)
+		public static int GetVarintSize(int value)
 		{
 			if ((value & -128) == 0)
 				return 1;
@@ -219,6 +219,19 @@ namespace LibMinecraft
 			else return 5;
 		}
 
+		public static byte[] GetVarintBytes(int value)
+		{
+			int size = GetVarintSize(value);
+			byte[] result = new byte[size];
+			int i = 0;
+			while ((value & 0xFFFFFF80) != 0)
+			{
+				result[i++] = (byte)(value & 0x7F | 0x80);
+				value >>= 7;
+			}
+			result[i++] = (byte)value;
+			return result;
+		}
 
 
 
@@ -255,30 +268,30 @@ namespace LibMinecraft
 		public ushort ReadUInt16()
 		{
 			return (ushort)(
-				this.ReadByte() << 8 |
-				this.ReadByte() << 0
+				this.ReadByte() << 1 * 8 |
+				this.ReadByte() << 0 * 8
 			);
 		}
 		public uint ReadUInt32()
 		{
 			return (uint)(
-				this.ReadByte() << 24 |
-				this.ReadByte() << 16 |
-				this.ReadByte() <<  8 |
-				this.ReadByte() <<  0
+				this.ReadByte() << 3 * 8 |
+				this.ReadByte() << 2 * 8 |
+				this.ReadByte() << 1 * 8 |
+				this.ReadByte() << 0 * 8
 			);
 		}
 		public ulong ReadUInt64()
 		{
 			return unchecked(
-				(ulong)this.ReadByte() << 56 |
-				(ulong)this.ReadByte() << 48 |
-				(ulong)this.ReadByte() << 40 |
-				(ulong)this.ReadByte() << 32 |
-				(ulong)this.ReadByte() << 24 |
-				(ulong)this.ReadByte() << 16 |
-				(ulong)this.ReadByte() <<  8 |
-				(ulong)this.ReadByte() <<  0
+				(ulong)this.ReadByte() << 7 * 8 |
+				(ulong)this.ReadByte() << 6 * 8 |
+				(ulong)this.ReadByte() << 5 * 8 |
+				(ulong)this.ReadByte() << 4 * 8 |
+				(ulong)this.ReadByte() << 3 * 8 |
+				(ulong)this.ReadByte() << 2 * 8 |
+				(ulong)this.ReadByte() << 1 * 8 |
+				(ulong)this.ReadByte() << 0 * 8
 			);
 		}
 

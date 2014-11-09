@@ -9,25 +9,13 @@
 <#@ output extension=".cs" #>
 
 using System;
+using System.Collections.Generic;
+
+using Newtonsoft.Json;
 
 namespace MineProtocol.net
 {
-
-
-	public class VersionInfo
-	{
-		
-		public int ProtocolID{ get; private set;}
-		public string VersionName {get; private set;}
-		public bool IsNewProtocol{ get; private set;}
-		public VersionInfo(int protocolId,string versionName,bool isNewProtocol = false)
-		{
-			this.ProtocolID = protocolId;
-			this.VersionName = versionName;
-			this.IsNewProtocol = isNewProtocol;
-		}
-	}
-	public static class ProtocolVersion
+	public struct ProtocolVersion
 	{
 
 //新バージョン(Netty版)
@@ -35,14 +23,14 @@ namespace MineProtocol.net
 			XmlDocument doc = new XmlDocument();
 			doc.Load(@"d:\prog\VS2013\Projects\MineProtocol.net\MineProtocol.net\Versions.xml");
 
-			XmlNodeList nodeList = doc.SelectNodes("versions/new/version");
-			foreach (XmlNode old in nodeList)
+			XmlNodeList newNodeList = doc.SelectNodes("versions/new/version");
+			foreach (XmlNode old in newNodeList)
 			{
 				string sProtocolId = old.Attributes["protocolId"].InnerText;
 				string versionName = old.InnerText;
 				string fieldName = versionName.Replace(".","_").Replace("/","_").Replace("-","_");
 #>
-		public static readonly VersionInfo MC<#=fieldName#> = new VersionInfo(<#= sProtocolId #>,"<#= versionName #>",true);
+		public static readonly ProtocolVersion MC<#=fieldName#> = new ProtocolVersion(<#= sProtocolId #>,"<#= versionName #>",true);
 <#
 			}
 #>
@@ -52,19 +40,159 @@ namespace MineProtocol.net
 //旧バージョン
 <#
 
-			nodeList = doc.SelectNodes("versions/old/version");
+			XmlNodeList oldNodeList = doc.SelectNodes("versions/old/version");
 
-			foreach (XmlNode old in nodeList)
+			foreach (XmlNode old in oldNodeList)
 			{
 				string sProtocolId = old.Attributes["protocolId"].InnerText;
 				string versionName = old.InnerText;
 				string fieldName = versionName.Replace(".","_").Replace("/","_").Replace("-","_");
 				
 #>
-		public static readonly VersionInfo MC<#=fieldName#> = new VersionInfo(<#= sProtocolId #>,"<#= versionName #>");
+		public static readonly ProtocolVersion MC<#=fieldName#> = new ProtocolVersion(<#= sProtocolId #>,"<#= versionName #>");
 <#
 			}
 
 #>
+
+public static Dictionary<int,List<ProtocolVersion>> ProtocolVersionList = new Dictionary<int,List<ProtocolVersion>>();
+		static ProtocolVersion()
+		{
+<#
+List<string> setId = new List<string>();
+foreach(XmlNode newnode in newNodeList)
+{
+string protocolId = newnode.Attributes["protocolId"].InnerText;
+if(setId.Contains(protocolId))
+	continue;
+	setId.Add(protocolId);
+#>
+			ProtocolVersionList.Add(<#=protocolId#>,new List<ProtocolVersion>());
+<#
+}
+
+#>
+
+//OldNodes
+<#
+
+foreach(XmlNode oldnode in oldNodeList)
+{
+string protocolId = oldnode.Attributes["protocolId"].InnerText;
+if(setId.Contains(protocolId))
+	continue;
+	setId.Add(protocolId);
+#>
+			ProtocolVersionList.Add(<#=protocolId#>,new List<ProtocolVersion>());
+<#
+}
+
+
+
+foreach(XmlNode newnode in newNodeList)
+{
+	string protocolId = newnode.Attributes["protocolId"].InnerText;
+	string versionName = newnode.InnerText;
+	string fieldName = versionName.Replace(".","_").Replace("/","_").Replace("-","_");
+#>
+			ProtocolVersionList[<#=protocolId#>].Add(MC<#=fieldName#>);
+<#
+}
+
+#>
+<#
+
+foreach(XmlNode oldnode in oldNodeList)
+{
+string protocolId = oldnode.Attributes["protocolId"].InnerText;
+	string versionName = oldnode.InnerText;
+	string fieldName = versionName.Replace(".","_").Replace("/","_").Replace("-","_");
+#>
+			ProtocolVersionList[<#=protocolId#>].Add(MC<#=fieldName#>);
+<#
+}
+
+
+#>
+
+		}
+
+
+		[JsonProperty(PropertyName="protocol")]
+		public readonly int ProtocolID;
+		[JsonProperty(PropertyName="name")]
+		public readonly string VersionName ;
+		[NonSerialized]
+		public readonly bool IsNewProtocol;
+
+
+
+		public ProtocolVersion(int protocolId,string versionName,bool isNewProtocol = false)
+		{
+			this.ProtocolID = protocolId;
+			this.VersionName = versionName;
+			this.IsNewProtocol = isNewProtocol;
+		}
+
+		
+		public static explicit operator int(ProtocolVersion info)
+		{
+			return info.ProtocolID;
+		}
+		public static explicit operator string(ProtocolVersion info)
+		{
+			return info.VersionName;
+		}
+
+		public static bool operator ==(ProtocolVersion a, ProtocolVersion b)
+		{
+			return a.ProtocolID == b.ProtocolID;
+		}
+		public static bool operator !=(ProtocolVersion a, ProtocolVersion b)
+		{
+			return a.ProtocolID != b.ProtocolID;
+		}
+		public static bool operator >(ProtocolVersion a, ProtocolVersion b)
+		{
+			int av = a.IsNewProtocol ? a.ProtocolID + 100 : a.ProtocolID;
+			int bv = b.IsNewProtocol ? b.ProtocolID + 100 : b.ProtocolID;
+
+			return av > bv;
+		}
+		public static bool operator >=(ProtocolVersion a, ProtocolVersion b)
+		{
+			int av = a.IsNewProtocol ? a.ProtocolID + 100 : a.ProtocolID;
+			int bv = b.IsNewProtocol ? b.ProtocolID + 100 : b.ProtocolID;
+
+			return av >= bv;
+		}
+		public static bool operator <(ProtocolVersion a, ProtocolVersion b)
+		{
+			int av = a.IsNewProtocol ? a.ProtocolID + 100 : a.ProtocolID;
+			int bv = b.IsNewProtocol ? b.ProtocolID + 100 : b.ProtocolID;
+
+			return av > bv;
+		}
+		public static bool operator <=(ProtocolVersion a, ProtocolVersion b)
+		{
+			int av = a.IsNewProtocol ? a.ProtocolID + 100 : a.ProtocolID;
+			int bv = b.IsNewProtocol ? b.ProtocolID + 100 : b.ProtocolID;
+
+			return av >= bv;
+		}
+
+
+		public override int GetHashCode()
+		{
+			return this.ProtocolID;
+		}
+		public override bool Equals(object obj)
+		{
+			if (obj is ProtocolVersion == false)
+				return false;
+
+			return this.ProtocolID == ((ProtocolVersion)obj).ProtocolID;
+		}
+
 	}
 }

@@ -64,6 +64,10 @@
       <Project>{3c971993-d69c-493c-a4f8-93fc931bfe91}</Project>
       <Name>LibMinecraft</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MineProtocol.net\MineProtocol.net.csproj">
+      <Project>{581d4516-3f8d-4cd3-aa49-d02ba4a67fbd}</Project>
+      <Name>MineProtocol.net</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

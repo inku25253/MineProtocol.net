@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibMinecraft;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,11 @@ namespace MineProtocol.net
 {
 	public interface IPacketData
 	{
-		VersionInfo Version { get; }
+		int ProtocolId { get; }
+		ProtocolState ProtocolStatus { get; }
+
+		Side Sides { get; }
 
 
-
-		void Write();
-		void Read();
 	}
 }

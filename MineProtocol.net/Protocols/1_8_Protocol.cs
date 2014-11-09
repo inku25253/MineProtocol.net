@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MineProtocol.net.Protocols._1._8
+namespace MineProtocol.net.Protocols
 {
 	public class MC18_Protocol : IProtocol
 	{

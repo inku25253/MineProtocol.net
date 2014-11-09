@@ -13,4 +13,9 @@ namespace MineProtocol.net
 		LOGIN = 2,
 		PLAY = 3
 	}
+	public enum Side : int
+	{
+		ServerToClient,
+		ClientToServer
+	}
 }

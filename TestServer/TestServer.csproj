@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{581D4516-3F8D-4CD3-AA49-D02BA4A67FBD}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{3B56D553-21FC-463E-BCBE-0A19F52307ED}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MineProtocol.net</RootNamespace>
-    <AssemblyName>MineProtocol.net</AssemblyName>
+    <RootNamespace>TestServer</RootNamespace>
+    <AssemblyName>TestServer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,7 +38,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,57 +45,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IPacket.cs" />
-    <Compile Include="IProtocol.cs" />
-    <Compile Include="MC18ProtocolTemplate.cs" />
-    <Compile Include="MineProtocol.cs" />
-    <Compile Include="PacketDataStorage.cs" />
-    <Compile Include="ProtocolEngineDictionary.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtocolEngine.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Protocols\1_8_Protocol.cs" />
-    <Compile Include="Protocols\Handshake\Client\HandshakePacket.cs" />
-    <Compile Include="Protocols\Login\Client\EncryptResponsePacket.cs" />
-    <Compile Include="Protocols\Login\Client\LoginStartPacket.cs" />
-    <Compile Include="Protocols\Login\Server\EncryptRequestPacket.cs" />
-    <Compile Include="Protocols\Login\Server\LoginKickPacket.cs" />
-    <Compile Include="Protocols\Login\Server\LoginSuccessPacket.cs" />
-    <Compile Include="Protocols\Login\Server\SetCompressionPacket.cs" />
-    <Compile Include="Protocols\MC18PacketReader.cs" />
-    <Compile Include="Protocols\MC18PacketWriter.cs" />
-    <Compile Include="Protocols\Status\Client\StatusRequestPacket.cs" />
-    <Compile Include="Protocols\Status\StatusPingPacket.cs" />
-    <Compile Include="Protocols\Status\Server\StatusResponsePacket.cs" />
-    <Compile Include="ProtocolVersion.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProtocolVersion.tt</DependentUpon>
-    </Compile>
-    <Compile Include="SocketMinecraftPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="ProtocolVersion.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ProtocolVersion.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Versions.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Protocols\Handshake\Server\" />
-    <Folder Include="Protocols\Play\Client\" />
-    <Folder Include="Protocols\Play\Server\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibMinecraft\LibMinecraft.csproj">
       <Project>{3c971993-d69c-493c-a4f8-93fc931bfe91}</Project>
       <Name>LibMinecraft</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MineProtocol.net\MineProtocol.net.csproj">
+      <Project>{581d4516-3f8d-4cd3-aa49-d02ba4a67fbd}</Project>
+      <Name>MineProtocol.net</Name>
     </ProjectReference>
     <ProjectReference Include="..\SocketPlus\System.Net.Sockets.Plus\System.Net.Sockets.Plus.csproj">
       <Project>{5a5ed60a-648c-450b-ad20-06b0d915ef61}</Project>
