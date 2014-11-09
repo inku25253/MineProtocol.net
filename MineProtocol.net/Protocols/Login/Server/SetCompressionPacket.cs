@@ -22,7 +22,7 @@ namespace MineProtocol.net.Protocols.Login.Server
 		}
 		public Side Sides
 		{
-			get { return Side.ServerToClient; }
+			get { return Side.Server; }
 		}
 	}
 }

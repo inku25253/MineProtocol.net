@@ -15,7 +15,7 @@ namespace MineProtocol.net
 	}
 	public enum Side : int
 	{
-		ServerToClient,
-		ClientToServer
+		Server,
+		Client
 	}
 }

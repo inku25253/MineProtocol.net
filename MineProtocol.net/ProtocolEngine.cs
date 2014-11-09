@@ -28,7 +28,7 @@ namespace MineProtocol.net
 
 			readerDictionary = new ProtocolEngineDictionary(version)
 			{
-				Side = side == net.Side.ClientToServer ? Side.ServerToClient : net.Side.ClientToServer,
+				Side = side == net.Side.Client ? Side.Server : net.Side.Client,
 				State = ProtocolState.HANDSHAKE
 			};
 
@@ -90,7 +90,7 @@ namespace MineProtocol.net
 			set
 			{
 				this.writerDictionary.Side = value;
-				this.readerDictionary.Side = (value == net.Side.ClientToServer) ? Side.ServerToClient : net.Side.ClientToServer;
+				this.readerDictionary.Side = (value == net.Side.Client) ? Side.Server : net.Side.Client;
 
 			}
 		}

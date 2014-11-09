@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MineProtocol.net
 {
-	public class MC18ProtocolTemplate : IPacketEncoder<SocketMinecraftPlayer, IPacketData, IPacketData>, IPacketDecoder<SocketMinecraftPlayer, IPacketData, IPacketData>
+	public class MC18ProtocolTemplate : IPacketEncoder<MinecraftClient, IPacketData, IPacketData>, IPacketDecoder<MinecraftClient, IPacketData, IPacketData>
 	{
 
 
@@ -25,8 +25,8 @@ namespace MineProtocol.net
 
 		public IPacketData Decode(
 			object sender,
-			SocketClient<SocketMinecraftPlayer, IPacketData, IPacketData> client,
-			SocketStream<SocketMinecraftPlayer, IPacketData, IPacketData> stream
+			SocketClient<MinecraftClient, IPacketData, IPacketData> client,
+			SocketStream<MinecraftClient, IPacketData, IPacketData> stream
 		)
 		{
 			MinecraftStream mineStream = new MinecraftStream(stream);
@@ -45,7 +45,7 @@ namespace MineProtocol.net
 
 		public byte[] Encode(
 			IPacketData packet,
-			SocketClient<SocketMinecraftPlayer, IPacketData, IPacketData> client
+			SocketClient<MinecraftClient, IPacketData, IPacketData> client
 		)
 		{
 			MinecraftStream mineStream = new MinecraftStream();

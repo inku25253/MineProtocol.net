@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace MineProtocol.net
 {
-	public class SocketMinecraftPlayer
+	public class MinecraftClient
 	{
 
 		public ProtocolEngine ProtocolEngine { get; internal set; }
 		public int ClientID;
 
-		public SocketMinecraftPlayer()
+		public MinecraftClient(ProtocolVersion version, Side side)
 		{
-			ProtocolEngine = new ProtocolEngine(ProtocolVersion.MC1_8, Side.ClientToServer);
+			ProtocolEngine = new ProtocolEngine(version, side);
 			MC18PacketWriter.RegistWriters(ProtocolEngine);
 			MC18PacketReader.RegistReaders(ProtocolEngine);
 			ProtocolEngine.Flush();

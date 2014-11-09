@@ -28,7 +28,7 @@ namespace TestServer
 			while (true)
 			{
 				Console.Clear();
-				SocketClient<SocketMinecraftPlayer, IPacketData, IPacketData> socket = new SocketClient<SocketMinecraftPlayer, IPacketData, IPacketData>();
+				SocketClient<MinecraftClient, IPacketData, IPacketData> socket = new SocketClient<MinecraftClient, IPacketData, IPacketData>();
 				MC18ProtocolTemplate template = new MC18ProtocolTemplate();
 
 				socket.Decoder = template;
@@ -49,12 +49,12 @@ namespace TestServer
 
 		}
 
-		static void socket_OnDisconnect(object sender, SocketDisconnectEventArgs<SocketMinecraftPlayer, IPacketData, IPacketData> args)
+		static void socket_OnDisconnect(object sender, SocketDisconnectEventArgs<MinecraftClient, IPacketData, IPacketData> args)
 		{
 			Console.WriteLine("切断");
 		}
 
-		static void socket_OnConnected(object sender, SocketConnectEventArgs<SocketMinecraftPlayer, IPacketData, IPacketData> args)
+		static void socket_OnConnected(object sender, SocketConnectEventArgs<MinecraftClient, IPacketData, IPacketData> args)
 		{
 			args.Client.Send(new HandshakePacket() { Version = ProtocolVersion.MC1_7_2, ServerAddress = "potechi.org", ServerPort= 27092, NextState = ProtocolState.STATUS });
 			args.State.ProtocolEngine.State = ProtocolState.STATUS;
@@ -63,7 +63,7 @@ namespace TestServer
 			args.Client.Send(new StatusPingPacket() { Time = Environment.TickCount });
 		}
 
-		private static void Client_OnDataReceived(object sender, SocketReceiveEventArgs<SocketMinecraftPlayer, IPacketData, IPacketData> args)
+		private static void Client_OnDataReceived(object sender, SocketReceiveEventArgs<MinecraftClient, IPacketData, IPacketData> args)
 		{
 			if (args.Packet == null)
 				return;
@@ -90,7 +90,7 @@ namespace TestServer
 		}
 
 
-		static void socket_OnDataReceived(object sender, SocketReceiveEventArgs<SocketMinecraftPlayer, IPacketData, IPacketData> args)
+		static void socket_OnDataReceived(object sender, SocketReceiveEventArgs<MinecraftClient, IPacketData, IPacketData> args)
 		{
 
 			IPacketData packet = args.Packet;

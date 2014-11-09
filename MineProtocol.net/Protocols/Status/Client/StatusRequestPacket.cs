@@ -21,7 +21,7 @@ namespace MineProtocol.net.Protocols.Status.Client
 		}
 		public Side Sides
 		{
-			get { return Side.ClientToServer; }
+			get { return Side.Client; }
 		}
 	}
 }

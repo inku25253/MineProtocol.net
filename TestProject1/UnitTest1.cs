@@ -55,7 +55,7 @@ namespace TestProject1
 		[TestMethod]
 		public void ProtocolEngineInitTest()
 		{
-			engine = new ProtocolEngine(ProtocolVersion.MC1_0_0, Side.ClientToServer);
+			engine = new ProtocolEngine(ProtocolVersion.MC1_0_0, Side.Client);
 			engine.RegistWriter<HandshakePacket>(test);
 			engine.Flush();
 		}

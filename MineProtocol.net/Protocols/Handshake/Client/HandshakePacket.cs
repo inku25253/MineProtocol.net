@@ -29,7 +29,7 @@ namespace MineProtocol.net.Protocols.Handshake.Client
 		}
 		public Side Sides
 		{
-			get { return Side.ClientToServer; }
+			get { return Side.Client; }
 		}
 	}
 }
