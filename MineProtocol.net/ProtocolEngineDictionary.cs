@@ -40,39 +40,17 @@ namespace MineProtocol.net
 
 		public Delegate Get(Type packetDataType)
 		{
-			if (usingCollection == null)
+			if(usingCollection == null)
 				throw new InvalidOperationException("初期化がされていません。 UsingVersionとSideとStateを設定してFlush()を実行してください。");
-			for (int i = 0; i < usingCollection.Length; ++i)
-			{
-				MultiKeyValue? value = usingCollection[i];
-				if (value.HasValue == false)
-					continue;
-				//if (value == null)
-				//	continue;
-				if (value.Value.DataType != packetDataType)
-					continue;
-				return value.Value.Value;
-			}
-			return null;
+			return (from value in usingCollection where value.HasValue != false where value.Value.DataType == packetDataType select value.Value.Value).FirstOrDefault();
 		}
 		public Delegate Get(int packetId)
 		{
-			if (usingCollection == null)
+			if(usingCollection == null)
 				throw new InvalidOperationException("初期化がされていません。 UsingVersionとSideとStateを設定してFlush()を実行してください。");
-			for (int i = 0; i < usingCollection.Length; ++i)
-			{
-				MultiKeyValue? value = usingCollection[i];
-				if (value.HasValue == false)
-					continue;
-				//if (value == null)
-				//	continue;
-				if (value.Value.Key != packetId)
-					continue;
-				return value.Value.Value;
-			}
-			return null;
+			return (from value in usingCollection where value.HasValue != false where value.Value.Key == packetId select value.Value.Value).FirstOrDefault();
 		}
-		public void Add(Type packetDataType, int packetId,Side side, ProtocolState protocolState, Delegate value1)
+		public void Add(Type packetDataType, int packetId, Side side, ProtocolState protocolState, Delegate value1)
 		{
 			MultiKeyValue value = new MultiKeyValue()
 			{
@@ -88,12 +66,12 @@ namespace MineProtocol.net
 		public bool ContainsKey(ProtocolVersion version, Side side, ProtocolState state, Type packetDataType)
 		{
 			return collection.Any(
-				(k) => k.HasValue || k.Value.Version == version && k.Value.Side == side && k.Value.ProtocolState == state && k.Value.DataType == packetDataType
+				(k) => k.HasValue && k.Value.Version == version && k.Value.Side == side && k.Value.ProtocolState == state && k.Value.DataType == packetDataType
 			);
 		}
 		public bool ContainsKey(Type packetData)
 		{
-			return usingCollection.Any((p) => p.HasValue ||  p.Value.DataType == packetData);
+			return usingCollection.Any((p) => p.HasValue && p.Value.DataType == packetData);
 		}
 
 	}

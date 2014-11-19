@@ -16,7 +16,7 @@ namespace MineProtocol.net.Protocols.Status.Client
 		{
 			get
 			{
-				return ProtocolState.STATUS;
+				return ProtocolState.Status;
 			}
 		}
 		public Side Sides

@@ -2,17 +2,13 @@
 using MineProtocol.net.Protocols.Handshake.Client;
 using MineProtocol.net.Protocols.Login.Client;
 using MineProtocol.net.Protocols.Login.Server;
+using MineProtocol.net.Protocols.Play.Server;
 using MineProtocol.net.Protocols.Status;
 using MineProtocol.net.Protocols.Status.Client;
 using MineProtocol.net.Protocols.Status.Server;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MineProtocol.net.Protocols
+namespace MineProtocol.net.MC18
 {
 	internal static class MC18PacketWriter
 	{
@@ -52,8 +48,10 @@ namespace MineProtocol.net.Protocols
 			****************************************************/
 			{
 
+				engine.RegistWriter<KickPacket>(PlayKickWriter);
 			}
 		}
+
 
 
 
@@ -112,7 +110,7 @@ namespace MineProtocol.net.Protocols
 
 		private static void LoginSuccessWriter(LoginSuccessPacket data, MinecraftStream ms)
 		{
-			ms.Write(data.UUID);
+			ms.Write(data.Uuid);
 			ms.Write(data.UserName);
 		}
 
@@ -131,6 +129,10 @@ namespace MineProtocol.net.Protocols
 		#region Play
 
 
+		private static void PlayKickWriter(KickPacket data, MinecraftStream ms)
+		{
+			ms.Write(data.Reason);
+		}
 
 		#endregion
 

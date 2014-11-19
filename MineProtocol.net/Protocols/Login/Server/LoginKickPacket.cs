@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MineProtocol.net.Protocols.Login.Server
+﻿namespace MineProtocol.net.Protocols.Login.Server
 {
-	public class LoginKickPacket : IPacketData
+	public struct LoginKickPacket :IPacketData
 	{
+		public LoginKickPacket(string result)
+		{
+			Result = result;
+		}
 
 		public string Result;
 
@@ -19,7 +17,7 @@ namespace MineProtocol.net.Protocols.Login.Server
 		{
 			get
 			{
-				return ProtocolState.LOGIN;
+				return ProtocolState.Login;
 			}
 		}
 		public Side Sides

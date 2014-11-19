@@ -20,7 +20,7 @@ namespace MineProtocol.net.Protocols.Login.Client
 		{
 			get
 			{
-				return ProtocolState.LOGIN;
+				return ProtocolState.Login;
 			}
 		}
 		public Side Sides

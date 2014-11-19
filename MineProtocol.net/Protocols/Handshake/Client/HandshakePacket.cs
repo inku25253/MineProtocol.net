@@ -1,13 +1,7 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace MineProtocol.net.Protocols.Handshake.Client
 {
-	public class HandshakePacket : IPacketData
+	public struct HandshakePacket :IPacketData
 	{
 		public ProtocolVersion Version;
 		public string ServerAddress;
@@ -24,7 +18,7 @@ namespace MineProtocol.net.Protocols.Handshake.Client
 		{
 			get
 			{
-				return ProtocolState.HANDSHAKE;
+				return ProtocolState.Handshake;
 			}
 		}
 		public Side Sides

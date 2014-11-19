@@ -1,70 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets.Plus;
-using System.Text;
-using System.Threading.Tasks;
+using MineProtocol.net.MC18;
 
 namespace MineProtocol.net
 {
 	public class MinecraftServer
 	{
-		SocketServer<MinecraftClient, IPacketData, IPacketData> socket = new SocketServer<MinecraftClient, IPacketData, IPacketData>();
+		private readonly SocketServer<MinecraftClient, IPacketData, IPacketData> _socket =
+			new SocketServer<MinecraftClient, IPacketData, IPacketData>();
+
+		public PacketService PacketService { get; private set; }
+
+
+		public event SocketServer<MinecraftClient, IPacketData, IPacketData>.SocketConnectEvent OnConnect
+		{
+			add { _socket.OnConnectRequest += value; }
+			remove { _socket.OnConnectRequest -= value; }
+		}
+
+		public event SocketServer<MinecraftClient, IPacketData, IPacketData>.SocketDisconnectEvent OnDisconnect
+		{
+			add { _socket.OnDisconnect += value; }
+			remove { _socket.OnDisconnect -= value; }
+		}
 
 
 		public MinecraftServer()
 		{
-			MC18ProtocolTemplate protocolTemplate = new MC18ProtocolTemplate();
-			socket.DefaultDecoder = protocolTemplate;
-			socket.DefaultEncoder = protocolTemplate;
+			var protocolTemplate = new MC18ProtocolTemplate();
 
-			socket.Activator = new SimpleActivator<MinecraftClient, IPacketData, IPacketData>(ProtocolVersion.MC1_8, Side.Server);
+			_socket.DefaultDecoder = protocolTemplate;
+			_socket.DefaultEncoder = protocolTemplate;
+
+			((SimpleActivator<MinecraftClient, IPacketData, IPacketData>)_socket.Activator)
+				.SetArguments(typeof(SocketClientRequest), ProtocolVersion.MC1_8, Side.Server);
 
 
-			socket.OnConnectRequest +=socket_OnConnectRequest;
-			socket.OnDataReceived +=socket_OnDataReceived;
-			socket.OnDisconnect +=socket_OnDisconnect;
-			socket.OnSocketException += socket_OnSocketException;
+			_socket.OnConnectRequest += socket_OnConnectRequest;
+			_socket.OnDataReceived += socket_OnDataReceived;
+			_socket.OnDisconnect += socket_OnDisconnect;
+			_socket.OnSocketException += socket_OnSocketException;
+
+			PacketService = new PacketService(new MC18HandshakeHandlers(), new MC18LoginHandlers(), new MC18StatusHandlers(), new MC18PlayHandlers());
 		}
 
-		void socket_OnConnectRequest(object sender, SocketConnectEventArgs<MinecraftClient, IPacketData, IPacketData> args)
+
+
+		private void socket_OnConnectRequest(object sender,
+			SocketConnectEventArgs<MinecraftClient, IPacketData, IPacketData> args)
+		{
+		}
+
+		private void socket_OnDataReceived(object sender,
+			SocketReceiveEventArgs<MinecraftClient, IPacketData, IPacketData> args)
+		{
+			PacketService.Handle(args.State, args.Packet);
+		}
+
+		private void socket_OnDisconnect(object sender,
+			SocketDisconnectEventArgs<MinecraftClient, IPacketData, IPacketData> args)
 		{
 
 		}
 
-		void socket_OnDataReceived(object sender, SocketReceiveEventArgs<MinecraftClient, IPacketData, IPacketData> args)
+		private void socket_OnSocketException(object sender,
+			SocketErrorEventArgs<MinecraftClient, IPacketData, IPacketData> args)
 		{
-
 		}
-
-		void socket_OnDisconnect(object sender, SocketDisconnectEventArgs<MinecraftClient, IPacketData, IPacketData> args)
-		{
-
-		}
-		void socket_OnSocketException(object sender, SocketErrorEventArgs<MinecraftClient, IPacketData, IPacketData> args)
-		{
-
-		}
-
-
 
 
 		public bool Setup(EndPoint endp)
 		{
-			return socket.Setup(endp);
+			return _socket.Setup(endp);
 		}
+
 		public void Start()
 		{
-			socket.Start();
+			_socket.Start();
 		}
+
 		public void Stop()
 		{
-			socket.Stop();
+			_socket.Stop();
 		}
-
-
-
-
 	}
 }

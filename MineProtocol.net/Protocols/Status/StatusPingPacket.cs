@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MineProtocol.net.Protocols.Status
+﻿namespace MineProtocol.net.Protocols.Status
 {
-	public class StatusPingPacket : IPacketData
+	public struct StatusPingPacket :IPacketData
 	{
-
+		public StatusPingPacket(long time)
+		{
+			Time = time;	
+		}
 		public long Time;
 		public int ProtocolId
 		{
@@ -18,7 +15,7 @@ namespace MineProtocol.net.Protocols.Status
 		{
 			get
 			{
-				return ProtocolState.STATUS;
+				return ProtocolState.Status;
 			}
 		}
 		public Side Sides

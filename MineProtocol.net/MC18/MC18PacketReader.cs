@@ -1,24 +1,23 @@
-﻿using LibMinecraft;
+﻿using System;
+using LibMinecraft;
 using MineProtocol.net.Protocols.Handshake.Client;
 using MineProtocol.net.Protocols.Login.Client;
 using MineProtocol.net.Protocols.Login.Server;
+using MineProtocol.net.Protocols.Play.Server;
 using MineProtocol.net.Protocols.Status;
 using MineProtocol.net.Protocols.Status.Client;
 using MineProtocol.net.Protocols.Status.Server;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MineProtocol.net.Protocols
+namespace MineProtocol.net.MC18
 {
 	internal static class MC18PacketReader
 	{
 
 		public static void RegistReaders(ProtocolEngine engine)
 		{
+			// ReSharper disable RedundantTypeArgumentsOfMethod
+
 			/***
 			  Handshake
 			****************************************************/
@@ -41,7 +40,9 @@ namespace MineProtocol.net.Protocols
 			{
 				engine.RegistReader<LoginStartPacket>(LoginStartReader);
 				engine.RegistReader<EncryptRequestPacket>(EncryptRequestReader);
+
 				engine.RegistReader<EncryptResponsePacket>(EncryptResponseReader);
+
 				engine.RegistReader<LoginSuccessPacket>(LoginSuccessReader);
 				engine.RegistReader<LoginKickPacket>(LoginKickReader);
 				engine.RegistReader<SetCompressionPacket>(LoginSetCompressionReader);
@@ -51,9 +52,13 @@ namespace MineProtocol.net.Protocols
 			  Play
 			****************************************************/
 			{
-
+				engine.RegistReader<KickPacket>(PlayKickReader);
 			}
+
+			// ReSharper restore RedundantTypeArgumentsOfMethod
 		}
+
+
 
 
 
@@ -91,7 +96,7 @@ namespace MineProtocol.net.Protocols
 
 		private static StatusPingPacket StatusPingReader(MinecraftStream ms)
 		{
-			return new StatusPingPacket() { Time  = ms.ReadInt64() };
+			return new StatusPingPacket() { Time = ms.ReadInt64() };
 		}
 		#endregion
 
@@ -133,7 +138,7 @@ namespace MineProtocol.net.Protocols
 
 		private static LoginSuccessPacket LoginSuccessReader(MinecraftStream ms)
 		{
-			return new LoginSuccessPacket() { UUID = ms.ReadString(), UserName = ms.ReadString() };
+			return new LoginSuccessPacket() { Uuid = ms.ReadString(), UserName = ms.ReadString() };
 		}
 
 		private static LoginKickPacket LoginKickReader(MinecraftStream ms)
@@ -150,7 +155,10 @@ namespace MineProtocol.net.Protocols
 
 		#region Play
 
-
+		private static KickPacket PlayKickReader(MinecraftStream ms)
+		{
+			return new KickPacket(ms.ReadString());
+		}
 
 		#endregion
 	}

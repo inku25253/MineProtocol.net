@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
-namespace MineProtocol.net
+namespace MineProtocol.net.Events
 {
-	public class MineProtocol
+	public class MinecraftEventArgs :EventArgs
 	{
-		public MineProtocol()
-		{
-
-
-		}
 	}
 }

@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MineProtocol.net
 {
-	public enum ProtocolState : int
+	public enum ProtocolState
 	{
-		HANDSHAKE = 0,
-		STATUS = 1,
-		LOGIN = 2,
-		PLAY = 3
+		Handshake = 0,
+		Status = 1,
+		Login = 2,
+		Play = 3
 	}
-	public enum Side : int
+
+	[Flags]
+	public enum Side
 	{
 		Server,
 		Client

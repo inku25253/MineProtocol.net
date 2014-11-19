@@ -1,13 +1,9 @@
-﻿using LibMinecraft;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets.Plus;
-using System.Text;
-using System.Threading.Tasks;
+using LibMinecraft;
 
-namespace MineProtocol.net
+namespace MineProtocol.net.MC18
 {
 	public class MC18ProtocolTemplate : IPacketEncoder<MinecraftClient, IPacketData, IPacketData>, IPacketDecoder<MinecraftClient, IPacketData, IPacketData>
 	{
