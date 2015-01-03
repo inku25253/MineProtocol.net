@@ -10,6 +10,7 @@ namespace MineProtocol.net
 	{
 
 //新バージョン(Netty版)
+		public static readonly ProtocolVersion MC1_8_1 = new ProtocolVersion(47,"1.8.1",true);
 		public static readonly ProtocolVersion MC1_8 = new ProtocolVersion(47,"1.8",true);
 		public static readonly ProtocolVersion MC1_8_pre3 = new ProtocolVersion(46,"1.8-pre3",true);
 		public static readonly ProtocolVersion MC1_8_pre2 = new ProtocolVersion(45,"1.8-pre2",true);
@@ -202,6 +203,7 @@ public static Dictionary<int,List<ProtocolVersion>> ProtocolVersionList = new Di
 			ProtocolVersionList.Add(50,new List<ProtocolVersion>());
 			ProtocolVersionList.Add(49,new List<ProtocolVersion>());
 			ProtocolVersionList.Add(48,new List<ProtocolVersion>());
+			ProtocolVersionList[47].Add(MC1_8_1);
 			ProtocolVersionList[47].Add(MC1_8);
 			ProtocolVersionList[46].Add(MC1_8_pre3);
 			ProtocolVersionList[45].Add(MC1_8_pre2);

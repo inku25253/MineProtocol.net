@@ -63,6 +63,7 @@
 		<version protocolId="22">1.0.0</version>
 	</old>
 	<new>
+		<version protocolId="47">1.8.1</version>
 		<version protocolId="47">1.8</version>
 		<version protocolId="46">1.8-pre3</version>
 		<version protocolId="45">1.8-pre2</version>
