@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MineProtocol.net.Protocols.Login.Server
 {
-	public class SetCompressionPacket : IPacketData
+	public struct SetCompressionPacket :IPacketData
 	{
 		public int Threshold;
 		public int ProtocolId
@@ -23,6 +23,11 @@ namespace MineProtocol.net.Protocols.Login.Server
 		public Side Sides
 		{
 			get { return Side.Server; }
+		}
+
+		public SetCompressionPacket(int threshold)
+		{
+			Threshold = threshold;
 		}
 	}
 }

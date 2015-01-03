@@ -45,7 +45,7 @@ namespace MineProtocol.net.MC18
 		)
 		{
 			MinecraftStream mineStream = new MinecraftStream();
-			mineStream.Write(packet.ProtocolId);
+			mineStream.WriteVarint(packet.ProtocolId);
 			client.State.ProtocolEngine.Write(packet, mineStream);
 
 			byte[] size = MinecraftStream.GetVarintBytes((int)mineStream.Position);

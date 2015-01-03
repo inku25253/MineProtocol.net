@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MineProtocol.net.Protocols.Login.Client
 {
-	public class EncryptResponsePacket : IPacketData
+	public struct EncryptResponsePacket : IPacketData
 	{
 		public byte[] SharedSecret;
 		public byte[] VerifyToken;
@@ -26,6 +26,12 @@ namespace MineProtocol.net.Protocols.Login.Client
 		public Side Sides
 		{
 			get { return Side.Client; }
+		}
+
+		public EncryptResponsePacket(byte[] sharedSecret, byte[] verifyToken)
+		{
+			SharedSecret = sharedSecret;
+			VerifyToken = verifyToken;	
 		}
 	}
 }

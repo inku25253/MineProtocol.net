@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Ports;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Xml;
@@ -21,29 +22,29 @@ namespace TestProject1
 			string two = "";
 			string tree = "";
 			string four = "";
-			for (int i = 0; i < 100; i++)
+			for(int i = 0; i < 100; i++)
 			{
 				one = Path.GetRandomFileName();
 				two = Path.GetRandomFileName();
 				tree = Path.GetRandomFileName();
 				four = Path.GetRandomFileName();
-				if (dic.ContainsKey(one) == false)
+				if(dic.ContainsKey(one) == false)
 				{
 
 					dic[one] = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
 
 
 				}
-				if (dic[one].ContainsKey(two) == false)
+				if(dic[one].ContainsKey(two) == false)
 				{
 					dic[one][two] = new Dictionary<string, Dictionary<string, string>>();
 
 				}
-				if (dic[one][two].ContainsKey(tree) == false)
+				if(dic[one][two].ContainsKey(tree) == false)
 				{
 					dic[one][two][tree] = new Dictionary<string, string>();
 				}
-				dic[one][two][tree][four] =  "VALUE";
+				dic[one][two][tree][four] = "VALUE";
 			}
 
 			Assert.IsTrue(dic.ContainsKey(one) && dic[one].ContainsKey(two) && dic[one][two].ContainsKey(tree) && dic[one][two][tree].ContainsKey(four));
@@ -67,7 +68,7 @@ namespace TestProject1
 			engine.Write(new HandshakePacket(), new MinecraftStream());
 
 		}
-		private static void test(IPacketData data, MinecraftStream ms)
+		private static void test(HandshakePacket data, MinecraftStream ms)
 		{
 
 		}

@@ -47,10 +47,19 @@ namespace MineProtocol.net.MC18
 			  Play
 			****************************************************/
 			{
-
 				engine.RegistWriter<KickPacket>(PlayKickWriter);
+
+				/** 0x00 **/ { engine.RegistWriter<KeepALivePacket>(KeepALiveWriter); }
+				/** 0x01 **/ { engine.RegistWriter<JoinGamePacket>(JoinGameWriter); }
+				/** 0x02 **/ { engine.RegistWriter<ChatMessagePacket>(ChatMessageWriter); }
+				/** 0x03 **/ { engine.RegistWriter<TimeUpdatePacket>(TimeUpdateWriter); }
+				/** 0x04 **/ { engine.RegistWriter<EntityEquipmentPacket>(EntityEquipmentWriter); }
+				/** 0x05 **/ { engine.RegistWriter<SpawnPositionPacket>(SpawnPositionWriter); }
+				/** 0x06 **/ { }
+
 			}
 		}
+
 
 
 
@@ -60,10 +69,10 @@ namespace MineProtocol.net.MC18
 		#region Handshake
 		private static void HandshakeWriter(HandshakePacket data, MinecraftStream ms)
 		{
-			ms.Write(data.Version.ProtocolID);
+			ms.WriteVarint(data.Version.ProtocolID);
 			ms.Write(data.ServerAddress);
 			ms.Write(data.ServerPort);
-			ms.Write((int)data.NextState);
+			ms.WriteVarint((int)data.NextState);
 		}
 		#endregion
 
@@ -94,16 +103,16 @@ namespace MineProtocol.net.MC18
 		private static void EncryptRequestWriter(EncryptRequestPacket data, MinecraftStream ms)
 		{
 			ms.Write(data.ServerID);
-			ms.Write(data.PublicKey.Length);
+			ms.WriteVarint(data.PublicKey.Length);
 			ms.Write(data.PublicKey);
-			ms.Write(data.VerifyToken.Length);
+			ms.WriteVarint(data.VerifyToken.Length);
 			ms.Write(data.VerifyToken);
 		}
 		private static void EncryptResponseWriter(EncryptResponsePacket data, MinecraftStream ms)
 		{
-			ms.Write(data.SharedSecret.Length);
+			ms.WriteVarint(data.SharedSecret.Length);
 			ms.Write(data.SharedSecret);
-			ms.Write(data.VerifyToken.Length);
+			ms.WriteVarint(data.VerifyToken.Length);
 			ms.Write(data.VerifyToken);
 		}
 
@@ -121,18 +130,94 @@ namespace MineProtocol.net.MC18
 
 		private static void LoginSetCompressionWriter(SetCompressionPacket data, MinecraftStream ms)
 		{
-			ms.Write(data.Threshold);
+			ms.WriteVarint(data.Threshold);
 		}
 
 		#endregion
 
 		#region Play
 
+		/// <summary>
+		/// 0x00
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
+		private static void KeepALiveWriter(KeepALivePacket data, MinecraftStream ms)
+		{
+			ms.WriteVarint(data.LiveId);
+		}
 
+		/// <summary>
+		/// 0x01
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
+		private static void JoinGameWriter(JoinGamePacket data, MinecraftStream ms)
+		{
+			ms.WriteInt32(data.EntityId);
+			ms.WriteByte((byte)data.Gamemode);
+			ms.Write((byte)data.Dimension);
+			ms.Write((byte)data.Difficulty);
+			ms.Write(data.MaxPlayers);
+			ms.Write(data.Level.ToString());
+			ms.Write(data.ReducedDebug);
+		}
+
+		/// <summary>
+		/// 0x02
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
+		private static void ChatMessageWriter(ChatMessagePacket data, MinecraftStream ms)
+		{
+			string jsonMessage = data.Message.ToJson();//JsonConvert.SerializeObject(data.Message);
+			ms.Write(jsonMessage);
+			ms.Write((byte)data.Position);
+		}
+
+		/// <summary>
+		/// 0x03
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
+		private static void TimeUpdateWriter(TimeUpdatePacket data, MinecraftStream ms)
+		{
+			ms.Write(data.WorldTime);
+			ms.Write(data.DayTime);
+		}
+
+		/// <summary>
+		/// 0x04
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
+		private static void EntityEquipmentWriter(EntityEquipmentPacket data, MinecraftStream ms)
+		{
+			ms.WriteVarint(data.EntityId);
+			//TODO: Slot待ち
+		}
+
+		/// <summary>
+		/// 0x05
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
+		private static void SpawnPositionWriter(SpawnPositionPacket data, MinecraftStream ms)
+		{
+			ms.Write(data.Position);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="ms"></param>
 		private static void PlayKickWriter(KickPacket data, MinecraftStream ms)
 		{
 			ms.Write(data.Reason);
 		}
+
+
 
 		#endregion
 

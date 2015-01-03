@@ -25,5 +25,13 @@ namespace MineProtocol.net.Protocols.Handshake.Client
 		{
 			get { return Side.Client; }
 		}
+
+		public HandshakePacket(ProtocolVersion version, string serverAddress, ushort serverPort, ProtocolState nextState)
+		{
+			Version = version;
+			ServerAddress = serverAddress;
+			ServerPort = serverPort;
+			NextState = nextState;
+		}
 	}
 }

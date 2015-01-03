@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets.Plus;
+using LibMinecraft;
 using MineProtocol.net.MC18;
 using MineProtocol.net.Protocols.Login.Server;
 using MineProtocol.net.Protocols.Play.Server;
@@ -58,8 +59,12 @@ namespace MineProtocol.net
 			MC18PacketReader.RegistReaders(ProtocolEngine);
 			ProtocolEngine.Flush();
 		}
-
-		public void Send(IPacketData data)
+		public void Send(ChatMessage chatMessage)
+		{
+			ChatMessagePacket chatPacket = new ChatMessagePacket(chatMessage, ChatPosition.ChatBox);
+			this.SendPacket(chatPacket);
+		}
+		public void SendPacket(IPacketData data)
 		{
 			_socket.Send(data);
 		}
@@ -70,10 +75,10 @@ namespace MineProtocol.net
 			switch(CurrentProtocolState)
 			{
 				case ProtocolState.Play:
-					this.Send(new KickPacket(reason));
+					this.SendPacket(new KickPacket(reason));
 					break;
 				default:
-					this.Send(new LoginKickPacket(reason));
+					this.SendPacket(new LoginKickPacket(reason));
 
 					break;
 			}

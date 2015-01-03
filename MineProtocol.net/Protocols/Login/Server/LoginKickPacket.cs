@@ -24,5 +24,6 @@
 		{
 			get { return Side.Server; }
 		}
+
 	}
 }

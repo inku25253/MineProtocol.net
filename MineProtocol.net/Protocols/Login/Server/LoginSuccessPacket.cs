@@ -1,6 +1,6 @@
 ﻿namespace MineProtocol.net.Protocols.Login.Server
 {
-	public class LoginSuccessPacket : IPacketData
+	public struct LoginSuccessPacket : IPacketData
 	{
 
 		public string Uuid;
@@ -21,6 +21,12 @@
 		public Side Sides
 		{
 			get { return Side.Server; }
+		}
+
+		public LoginSuccessPacket(string uuid, string userName)
+		{
+			Uuid = uuid;
+			UserName = userName;
 		}
 	}
 }

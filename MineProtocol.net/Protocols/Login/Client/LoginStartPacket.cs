@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MineProtocol.net.Protocols.Login.Client
 {
-	public class LoginStartPacket : IPacketData
+	public struct LoginStartPacket : IPacketData
 	{
 
 		public string Name;
@@ -25,6 +25,11 @@ namespace MineProtocol.net.Protocols.Login.Client
 		public Side Sides
 		{
 			get { return Side.Client; }
+		}
+
+		public LoginStartPacket(string name)
+		{
+			Name = name;	
 		}
 	}
 }

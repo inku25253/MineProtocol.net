@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibMinecraft
 {
-	public class MinecraftStream : Stream
+	public class MinecraftStream :Stream
 	{
 		private Stream baseStream;
 		public Stream BaseStream { get { return baseStream; } }
@@ -64,7 +64,7 @@ namespace LibMinecraft
 			}
 			set
 			{
-				if (CanSeek == false)
+				if(CanSeek == false)
 					throw new NotSupportedException();
 				this.baseStream.Position = value;
 			}
@@ -72,14 +72,14 @@ namespace LibMinecraft
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			if (this.CanRead == false)
+			if(this.CanRead == false)
 				throw new NotSupportedException();
 			return this.baseStream.Read(buffer, offset, count);
 		}
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			if (this.CanSeek == false)
+			if(this.CanSeek == false)
 				throw new NotSupportedException();
 			return this.baseStream.Seek(offset, origin);
 		}
@@ -91,7 +91,7 @@ namespace LibMinecraft
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
-			if (this.CanWrite == false)
+			if(this.CanWrite == false)
 				throw new NotSupportedException();
 			this.baseStream.Write(buffer, offset, count);
 		}
@@ -169,7 +169,7 @@ namespace LibMinecraft
 		{
 			byte[] bValue = this.StringEncode.GetBytes(value);
 
-			this.Write(bValue.Length);
+			this.WriteVarint(bValue.Length);
 			this.Write(bValue);
 		}
 
@@ -192,13 +192,25 @@ namespace LibMinecraft
 		}
 
 
-		public void Write(int value)
+		public void WriteVarint(int value)
 		{
 			this.WriteVarlong(value);
 		}
+
+
+		public void Write(Vector3 value)
+		{
+			long encodeValue = (
+					(((int)value.X & 0x3FFFFFF) << 38) |
+					(((int)value.Y & 0xFFF) << 26) |
+					((int)value.Z & 0x3FFFFFF)
+				);
+			Write(encodeValue);
+		}
+
 		public void WriteVarlong(long value)
 		{
-			while ((value & 0xFFFFFF80) != 0)
+			while((value & 0xFFFFFF80) != 0)
 			{
 				this.Write((byte)(value & 0x7F | 0x80));
 				value >>= 7;
@@ -208,15 +220,16 @@ namespace LibMinecraft
 		}
 		public static int GetVarintSize(int value)
 		{
-			if ((value & -128) == 0)
+			if((value & -128) == 0)
 				return 1;
-			else if ((value & -16384)== 0)
+			else if((value & -16384) == 0)
 				return 2;
-			else if ((value & -2097152) == 0)
+			else if((value & -2097152) == 0)
 				return 3;
-			else if ((value & -268435456) == 0)
+			else if((value & -268435456) == 0)
 				return 4;
-			else return 5;
+			else
+				return 5;
 		}
 
 		public static byte[] GetVarintBytes(int value)
@@ -224,7 +237,7 @@ namespace LibMinecraft
 			int size = GetVarintSize(value);
 			byte[] result = new byte[size];
 			int i = 0;
-			while ((value & 0xFFFFFF80) != 0)
+			while((value & 0xFFFFFF80) != 0)
 			{
 				result[i++] = (byte)(value & 0x7F | 0x80);
 				value >>= 7;
@@ -331,7 +344,37 @@ namespace LibMinecraft
 		}
 
 
+		public Vector3 ReadPosition()
+		{
+			long encodeValue = this.ReadInt64();
+			Vector3 result = new Vector3();
+			result.X = (encodeValue >> 38);
+			result.Y = ((encodeValue >> 26) & 0xFFF);
+			result.Z = (encodeValue << 38 >> 38);
+			return result;
+		}
 
+		public int ReadVarint(out int length)
+		{
+
+			int i = 0;
+			length = 0;
+
+			byte c;
+
+			do
+			{
+				c = (byte)this.ReadByte();
+				i |= (c & 127) << length++ * 7;
+
+				if(length > 5)
+				{
+					throw new OverflowException();
+				}
+			} while((c & 128) == 128);
+
+			return i;
+		}
 
 		public int ReadVarint()
 		{
@@ -344,11 +387,11 @@ namespace LibMinecraft
 				c = (byte)this.ReadByte();
 				i |= (c & 127) << j++ * 7;
 
-				if (j > 5)
+				if(j > 5)
 				{
 					throw new OverflowException();
 				}
-			} while ((c & 128) == 128);
+			} while((c & 128) == 128);
 
 			return i;
 		}
@@ -364,11 +407,11 @@ namespace LibMinecraft
 				c = (byte)this.ReadByte();
 				i |= (long)(c & 127) << j++ * 7;
 
-				if (j > 9)
+				if(j > 9)
 				{
 					throw new OverflowException();
 				}
-			} while ((c & 128) == 128);
+			} while((c & 128) == 128);
 
 			return i;
 		}

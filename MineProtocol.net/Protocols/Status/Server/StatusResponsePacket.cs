@@ -52,6 +52,11 @@ namespace MineProtocol.net.Protocols.Status.Server
 				this.Description = description;
 				this.Favicon = favicon;
 			}
+
+			public ResponseData()
+			{
+				
+			}
 		}
 		public class ForgeResponseData :ResponseData
 		{
